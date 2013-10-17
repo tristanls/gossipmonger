@@ -182,9 +182,9 @@ test['gossip() updates liveness of live and dead peers'] = function (test) {
         livePeers: function () {
             return lPeers;
         },
-        put: function (peer) {
+        put: function (id, peer) {
             // called twice (once for live3 and once for dead2)
-            test.ok(["live3", "dead2"].indexOf(peer.id) > -1);
+            test.ok(["live3", "dead2"].indexOf(id) > -1);
         }
     };
     var transport = new events.EventEmitter();

@@ -295,7 +295,7 @@ Gossipmonger.prototype.gossip = function gossip () {
         var phi = livePeer.phi();
         if (phi > self.DEAD_PEER_PHI || isNaN(phi)) {
             livePeer.markDead();
-            self.storage.put(livePeer); // commit to storage that peer is dead
+            self.storage.put(livePeer.id, livePeer); // commit to storage that peer is dead
             self.emit('peer dead', livePeer);
         }
     });
@@ -303,7 +303,7 @@ Gossipmonger.prototype.gossip = function gossip () {
         var phi = deadPeer.phi();
         if (phi < self.DEAD_PEER_PHI) {
             deadPeer.markLive();
-            self.storage.put(deadPeer); // commit to storage that peer is live
+            self.storage.put(deadPeer.id, deadPeer); // commit to storage that peer is live
             self.emit('peer live', deadPeer);
         }
     });
