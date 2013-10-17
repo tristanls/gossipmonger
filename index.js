@@ -259,12 +259,12 @@ Gossipmonger.prototype.gossip = function gossip () {
 
     // gossip with live peers
     var livePeers = self.storage.livePeers();
+    var digestToSend = self.digest(livePeers);
     if (livePeers.length > 0) {
         // select random live peer
         var livePeer = livePeers[Math.floor(Math.random() * livePeers.length)];
-        var digest = self.digest(livePeers);
-        self.emit('digest send', livePeer, digest);
-        self.transport.digest(livePeer, self.localPeer, digest);
+        self.emit('digest send', livePeer, digestToSend);
+        self.transport.digest(livePeer, self.localPeer, digestToSend);
     }
 
     // maybe try to gossip with a dead peer
@@ -275,21 +275,19 @@ Gossipmonger.prototype.gossip = function gossip () {
     if (livePeers.length == 0)
         probability = 1;
 
-    if (Math.random() < probability) {
+    if (Math.random() < probability && deadPeers.length > 0) {
         // select random dead peer
         var deadPeer = deadPeers[Math.floor(Math.random() * deadPeers.length)];
-        var digest = self.digest(livePeers);
-        self.emit('digest send', deadPeer, digest);
-        self.transport.digest(deadPeer, self.localPeer, digest);
+        self.emit('digest send', deadPeer, digestToSend);
+        self.transport.digest(deadPeer, self.localPeer, digestToSend);
     }
 
     // gossip to a seed if live peers are getting scarce
-    if (livePeers.length < self.MINIMUM_LIVE_PEERS) {
+    if (livePeers.length < self.MINIMUM_LIVE_PEERS && self.seeds.length > 0) {
         // select random seed
         var seed = self.seeds[Math.floor(Math.random() * self.seeds.length)];
-        var digest = self.digest(livePeers);
-        self.emit('digest send', seed, digest);
-        self.transport.digest(seed, self.localPeer, digest);
+        self.emit('digest send', seed, digestToSend);
+        self.transport.digest(seed, self.localPeer, digestToSend);
     }
 
     // update peer liveness
@@ -315,7 +313,7 @@ Gossipmonger.prototype.gossip = function gossip () {
         clearTimeout(self.timeout);
 
     // go another round
-    self.timeout = setTimeout(self.gossip, self.GOSSIP_INTERVAL);
+    self.timeout = setTimeout(self.gossip.bind(self), self.GOSSIP_INTERVAL);
 };
 
 /*
