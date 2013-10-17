@@ -30,12 +30,19 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 "use strict";
 
-var deepEqual = require('./deepEqual.js'),
-    events = require('events'),
-    Peer = require('./peer.js'),
+var events = require('events'),
+    Peer = require('gossipmonger-peer'),
     util = require('util');
 
 /*
+  * `peerInfo`: _Object_
+    * `data`: _Object_ _(Default: {})_ A map of key, [value, version] pairs to 
+            store for this peer. 
+    * `id`: _String_ Id of this peer.      
+    * `maxVersionSeen`: _Integer_ _(Default: 0)_ Vector clock value indicating
+            the last version of the version of the last change of this peer.
+    * `transport`: _Any_ Any data identifying this peer to the transport 
+            mechanism that is required for correct transport operation.            
   * `options`: _Object_
     * `DEAD_PEER_PHI`: _Integer_ _(Default: 8)_ Phi accrual failure detector value
             that when exceeded assumes the corresponding peer is dead.
@@ -46,14 +53,6 @@ var deepEqual = require('./deepEqual.js'),
     * `MINIMUM_LIVE_PEERS`: _Integer_ _(Default: 1)_ If the number of live peers visible
             to this peer drops below `MINIMUM_LIVE_PEERS`, this peer will make sure
             to gossip with one of the seeds even if it thinks it's dead.
-    * `peerInfo`: _Object_
-      * `data`: _Object_ _(Default: {})_ A map of key, [value, version] pairs to 
-              store for this peer. 
-      * `id`: _String_ Id of this peer.      
-      * `maxVersionSeen`: _Integer_ _(Default: 0)_ Vector clock value indicating
-              the last version of the version of the last change of this peer.
-      * `transport`: _Any_ Any data identifying this peer to the transport 
-              mechanism that is required for correct transport operation.
     * `seeds`: _Array_ _(Default: [])_ An array of seed peers that the `transport`
             understands.
     * `storage`: _Object_ _(Default: `gossipmonger-memory-storage`)_ An 
@@ -67,17 +66,18 @@ var deepEqual = require('./deepEqual.js'),
             If `transport` is not provided, a new instance of `gossipmonger-tcp-transport` 
             will be created and used with default settings.
 */
-var Gossipmonger = module.exports = function Gossipmonger (options) {
+var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
     var self = this;
     events.EventEmitter.call(self);
 
     options = options || {};
 
+    self.localPeer = new Peer(peerInfo);
+
     self.DEAD_PEER_PHI = options.DEAD_PEER_PHI || 8;
     self.GOSSIP_INTERVAL = options.GOSSIP_INTERVAL || 1000;
     self.MAX_DELTAS_PER_GOSSIP = options.MAX_DELTAS_PER_GOSSIP || 5;
     self.MINIMUM_LIVE_PEERS = options.MINIMUM_LIVE_PEERS || 1;
-    self.peerInfo = new Peer(options.peerInfo);
     self.seeds = options.seeds || [];
     self.storage = options.storage;
     if (!self.storage) {
@@ -220,7 +220,7 @@ var Gossipmonger = module.exports = function Gossipmonger (options) {
 
         // respond to the peer with deltas
         self.emit('deltas send', remotePeer, deltasToSend);
-        self.transport.deltas(remotePeer, self.peerInfo, deltasToSend);
+        self.transport.deltas(remotePeer, self.localPeer, deltasToSend);
     });
 
     self.timeout = null;
@@ -248,9 +248,9 @@ Gossipmonger.prototype.digest = function digest (livePeers) {
 
     // add self
     result.push({
-        id: self.peerInfo.id,
-        maxVersionSeen: self.peerInfo.maxVersionSeen,
-        transport: self.peerInfo.transport
+        id: self.localPeer.id,
+        maxVersionSeen: self.localPeer.maxVersionSeen,
+        transport: self.localPeer.transport
     });
 
     return result;
@@ -266,7 +266,7 @@ Gossipmonger.prototype.gossip = function gossip () {
         var livePeer = livePeers[Math.floor(Math.random() * livePeers.length)];
         var digest = self.digest(livePeers);
         self.emit('digest send', livePeer, digest);
-        self.transport.digest(livePeer, self.peerInfo, digest);
+        self.transport.digest(livePeer, self.localPeer, digest);
     }
 
     // maybe try to gossip with a dead peer
@@ -282,7 +282,7 @@ Gossipmonger.prototype.gossip = function gossip () {
         var deadPeer = deadPeers[Math.floor(Math.random() * deadPeers.length)];
         var digest = self.digest(livePeers);
         self.emit('digest send', deadPeer, digest);
-        self.transport.digest(deadPeer, self.peerInfo, digest);
+        self.transport.digest(deadPeer, self.localPeer, digest);
     }
 
     // gossip to a seed if live peers are getting scarce
@@ -291,7 +291,7 @@ Gossipmonger.prototype.gossip = function gossip () {
         var seed = self.seeds[Math.floor(Math.random() * self.seeds.length)];
         var digest = self.digest(livePeers);
         self.emit('digest send', seed, digest);
-        self.transport.digest(seed, self.peerInfo, digest);
+        self.transport.digest(seed, self.localPeer, digest);
     }
 
     // update peer liveness
@@ -327,5 +327,5 @@ Gossipmonger.prototype.gossip = function gossip () {
 Gossipmonger.prototype.update = function update (key, value) {
     var self = this;
 
-    self.peerInfo.updateLocal(key, value);
+    self.localPeer.updateLocal(key, value);
 };
