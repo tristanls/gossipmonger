@@ -287,6 +287,8 @@ Storage modules shall rely on `peer.live` property to keep track of `peer` liven
 
 Storage modules shall treat all `peer` properties as immutable.
 
+For reference implementation, see [gossipmonger-memory-storage](https://github.com/tristanls/gossipmonger-memory-storage).
+
 ### Gossipmonger Storage API
 
   * [storage.deadPeers()](#storagedeadpeers)
@@ -334,14 +336,10 @@ For reference implementation, see [gossipmonger-tcp-transport](https://github.co
 ### transport.deltas(remotePeer, localPeer, deltasToSend)
 
   * `remotePeer`: _Object_ Peer to send rpc to.
-    * `transport`: _Object_ TCP transport data.
-      * `host`: _String_ Host to connect to.
-      * `port`: _Integer_ Port to connect to.
+    * `transport`: _Any_ Any data that the transport mechanism requires for operation. 
   * `localPeer`: _Object_ Sender peer.
     * `id`: _String_ Sender peer id.
-    * `transport`: _Object_ TCP transport data.
-      * `host`: _String_ Host to connect to.
-      * `port`: _Integer_ Port to connect to.
+    * `transport`: _Any_ Any data that the transport mechanism requires for operation. 
   * `deltasToSend`: _Any_ Deltas to send.
 
 Sends `deltasToSend` to the `remotePeer`.
@@ -349,14 +347,10 @@ Sends `deltasToSend` to the `remotePeer`.
 ### transport.digest(remotePeer, localPeer, digestToSend)
 
   * `remotePeer`: _Object_ Peer to send rpc to.
-    * `transport`: _Object_ TCP transport data.
-      * `host`: _String_ Host to connect to.
-      * `port`: _Integer_ Port to connect to.
+    * `transport`: _Any_ Any data that the transport mechanism requires for operation. 
   * `localPeer`: _Object_ Sender peer.
     * `id`: _String_ Sender peer id.
-    * `transport`: _Object_ TCP transport data.
-      * `host`: _String_ Host to connect to.
-      * `port`: _Integer_ Port to connect to.
+    * `transport`: _Any_ Any data that the transport mechanism requires for operation. 
   * `digestToSend`: _Any_ Digest to send.
 
 Sends `digestToSend` to the `remotePeer`.
@@ -380,3 +374,13 @@ Emitted when TcpTransport receives `deltas` from a peer.
     * `digest`: _Any_ Received digest.
 
 Emitted when TcpTransport receives `digest` from a peer.
+
+## Available Modules
+
+### Storage
+
+  * [gossipmonger-memory-storage](https://github.com/tristanls/gossipmonger-memory-storage): In-memory storage engine for Gossipmonger.
+
+### Transports
+
+  * [gossipmonger-tcp-transport](https://github.com/tristanls/gossipmonger-tcp-transport): TCP Transport for Gossipmonger.
