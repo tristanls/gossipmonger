@@ -4,7 +4,7 @@ _Stability: 1 - [Experimental](https://github.com/tristanls/stability-index#stab
 
 [![NPM version](https://badge.fury.io/js/gossipmonger.png)](http://npmjs.org/package/gossipmonger)
 
-Gossipmonger is an implementation of the Scuttlebutt gossip protocol endpoint for real-time peer-to-peer peer-state distribution.
+Gossipmonger is an implementation of the Scuttlebutt gossip protocol endpoint for real-time peer-to-peer state distribution with pluggable storage and transport mechanisms.
 
 ## Usage
 
@@ -14,16 +14,16 @@ var Gossipmonger = require('gossipmonger');
 var gossipmonger = new Gossipmonger(
     { // peerInfo
         id: "localId",
-        transport: {
+        transport: { // default gossipmonger-tcp-transport data
             host: "localhost",
             port: 9742
         }
     },
     { // options
         seeds: [
-            {id: "seed1", transport {...}},
-            {id: "seed2", transport {...}},
-            {id: "seed3", transport {...}}
+            {id: "seed1", transport {/*...*/}},
+            {id: "seed2", transport {/*...*/}},
+            {id: "seed3", transport {/*...*/}}
         ]
     });
 
