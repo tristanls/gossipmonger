@@ -85,8 +85,8 @@ test["on 'deltas' gossipmonger marks contact on previously stored peer and store
     transport.emit('deltas', remotePeer, []);
 };
 
-test["on 'deltas' gossipmonger creates new peer if not in storage and stores it"] = function (test) {
-    test.expect(4);
+test["on 'deltas' gossipmonger creates new peer if not in storage, emits 'new peer', and stores it"] = function (test) {
+    test.expect(5);
     var remotePeer = {id: "remote", transport: {host: 'localhost'}};
     var peerMock = {
         markContact: function () {}
@@ -107,6 +107,9 @@ test["on 'deltas' gossipmonger creates new peer if not in storage and stores it"
     var gossipmonger = new Gossipmonger({id: "foo"}, {
         storage: storage,
         transport: transport
+    });
+    gossipmonger.on('new peer', function (peer) {
+        test.equal(peer.id, "remote");
     });
     transport.emit('deltas', remotePeer, []);
 };
