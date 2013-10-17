@@ -72,7 +72,7 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
 
     options = options || {};
 
-    self.localPeer = new Peer(peerInfo);
+    self.localPeer = new Peer(peerInfo.id, peerInfo);
 
     self.DEAD_PEER_PHI = options.DEAD_PEER_PHI || 8;
     self.GOSSIP_INTERVAL = options.GOSSIP_INTERVAL || 1000;
@@ -82,12 +82,12 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
     self.storage = options.storage;
     if (!self.storage) {
         var MemoryStorage = require('gossipmonger-memory-storage');
-        self.storage = new MemoryStorage(options);
+        self.storage = new MemoryStorage();
     }
     self.transport = options.transport;
     if (!self.transport) {
         var TcpTransport = require('gossipmonger-tcp-transport');
-        self.transport = new TcpTransport(options);
+        self.transport = new TcpTransport();
     }
 
     /*
@@ -103,8 +103,7 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
         var remote = self.storage.get(remotePeer.id);
 
         if (!remote) {
-            remote = new Peer({
-                id: remotePeer.id,
+            remote = new Peer(remotePeer.id, {
                 lastTime: new Date().getTime(), // first contact now
                 transport: remotePeer.transport
             });
