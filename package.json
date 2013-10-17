@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:tristanls/node-gossipmonger.git"
+    "url": "git@github.com:tristanls/gossipmonger.git"
   },
   "keywords": [
     "gossip",
