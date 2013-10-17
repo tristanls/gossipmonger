@@ -8,8 +8,8 @@
   "main": "index.js",
   "dependencies": {
     "clone": "0.1.9",
-    "gossipmonger-memory-storage": "0.0.0",
-    "gossipmonger-tcp-transport": "0.0.0"
+    "gossipmonger-memory-storage": "0.1.0",
+    "gossipmonger-tcp-transport": "0.1.0"
   },
   "devDependencies": {
     "nodeunit": "0.8.1"
