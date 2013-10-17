@@ -147,8 +147,7 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
         var remote = self.storage.get(remotePeer.id);
 
         if (!remote) {
-            remote = new Peer({
-                id: remotePeer.id, 
+            remote = new Peer(remotePeer.id, {
                 lastTime: new Date().getTime(), // first contact now
                 transport: remotePeer.transport
             });
@@ -165,7 +164,7 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
             
             if (!p) {
                 // add previously unknown peer to our awareness
-                p = new Peer(peer);
+                p = new Peer(peer.id, peer);
                 self.storage.put(peer.id, p);
                 self.emit('new peer', p);
             }
@@ -193,7 +192,7 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
         // we use two MAX_DELTAS_PER_GOSSIP checks to circuitbreak at the first
         // point when we've done enough calculations to send max allowed deltas
         for (var i = 0; i < candidateDeltas.length; i++) {
-            if (deltasToSend.length > self.MAX_DELTAS_PER_GOSSIP)
+            if (deltasToSend.length >= self.MAX_DELTAS_PER_GOSSIP)
                 break;
 
             var candidate = candidateDeltas[i];
@@ -208,10 +207,10 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
             });
 
             for (var j = 0; j < candidate.deltas.length; j++) {
-                if (deltasToSend.length > self.MAX_DELTAS_PER_GOSSIP)
+                if (deltasToSend.length >= self.MAX_DELTAS_PER_GOSSIP)
                     break;
 
-                var d = candidate.deltas[i];
+                var d = candidate.deltas[j];
                 d.unshift(candidate.peer.id); // [peerId, key, value, version]
                 deltasToSend.push(d);
             }
