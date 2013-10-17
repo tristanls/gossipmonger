@@ -8,6 +8,7 @@
   "main": "index.js",
   "dependencies": {
     "gossipmonger-memory-storage": "0.1.0",
+    "gossipmonger-peer": "0.1.0",
     "gossipmonger-tcp-transport": "0.1.0"
   },
   "devDependencies": {
