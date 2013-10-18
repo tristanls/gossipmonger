@@ -390,3 +390,7 @@ Emitted when TcpTransport receives `digest` from a peer.
 ### Transports
 
   * [gossipmonger-tcp-transport](https://github.com/tristanls/gossipmonger-tcp-transport): TCP Transport for Gossipmonger.
+
+## Sources
+
+  * [Efficient Reconciliation and Flow Control for Anti-Entropy Protocols](http://www.cs.cornell.edu/home/rvr/papers/flowgossip.pdf)
