@@ -231,9 +231,11 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
             }
         }
 
-        // respond to the peer with deltas
-        self.emit('deltas send', remotePeer, deltasToSend);
-        self.transport.deltas(remotePeer, self.localPeer, deltasToSend);
+        // respond to the peer with deltas (but only if we have any to send)
+        if (deltasToSend.length > 0) {
+            self.emit('deltas send', remotePeer, deltasToSend);
+            self.transport.deltas(remotePeer, self.localPeer, deltasToSend);
+        }
     });
 
     self.timeout = null;

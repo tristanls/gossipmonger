@@ -188,6 +188,43 @@ test["on 'digest' if gossipmonger finds unknown peer it does not create it "
     test.done();
 };
 
+test["on 'digest' if gossipmonger has no deltas to send it does not send it"] = function (test) {
+    test.expect(1);
+    var remotePeer = {id: "remote", transport: {host: 'localhost'}};
+    var digest = [{id: "new1", maxVersionSeen: 3422, transport: {host: 'new1host'}}];
+    var peerMock = {
+        id: "mock",
+        markContact: function () {}
+    };
+    var storage = {
+        get: function (id) {
+            if (id == "remote")
+                return peerMock;
+            
+            if (id == "new1") {
+                return {
+                    id: "new1",
+                    maxVersionSeen: 3421
+                };
+            }
+            return null;
+        },
+        put: function (id, peer) {
+            test.equal(id, "mock");
+        }
+    };
+    var transport = new events.EventEmitter();
+    transport.deltas = function (rPeer, lPeer, deltasToSend) {
+        assert.fail("deltas sent via transport");
+    };
+    var gossipmonger = new Gossipmonger({id: "foo", transport: "bar"}, {
+        storage: storage, 
+        transport: transport
+    });
+    transport.emit('digest', remotePeer, digest);
+    test.done();
+};
+
 test["on 'digest' if gossipmonger has local peer with larger version it sends "
     + "delta to remote peer"] = function (test) {
     test.expect(5);
