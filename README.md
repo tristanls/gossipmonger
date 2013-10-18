@@ -28,7 +28,7 @@ var gossipmonger = new Gossipmonger(
     });
 
 gossipmonger.on('new peer', function (newPeer) {
-    console.log("found new peer " + newPeer.id " at " + newPeer.transport);
+    console.log("found new peer " + newPeer.id + " at " + newPeer.transport);
 });
 
 gossipmonger.on('peer dead', function (deadPeer) {
