@@ -160,6 +160,21 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
         // generate deltas to send to peer
         var candidateDeltas = [];
         digest.forEach(function (peer) {
+            
+            // first check if the peer is the local node
+            if (peer.id == self.localPeer.id) {
+                if (self.localPeer.maxVersionSeen > peer.maxVersionSeen) {
+                    candidateDeltas.push({
+                        peer: {
+                            id: self.localPeer.id
+                        },
+                        deltas: self.localPeer.deltasAfterVersion(peer.maxVersionSeen)
+                    });
+                }
+
+                return;
+            }
+
             var p = self.storage.get(peer.id);
             
             if (!p) {

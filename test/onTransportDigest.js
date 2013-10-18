@@ -30,7 +30,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 "use strict";
 
-var events = require('events'),
+var assert = require('assert'),
+    events = require('events'),
     Gossipmonger = require('../index.js');
 
 var test = module.exports = {};
@@ -155,6 +156,38 @@ test["on 'digest' if gossipmonger finds unknown peer in digest it creates it, "
     transport.emit('digest', remotePeer, digest);
 };
 
+test["on 'digest' if gossipmonger finds unknown peer it does not create it "
+    + " if it is itself"] = function (test) {
+    test.expect(0);
+    var remotePeer = {id: "remote", transport: {host: 'localhost'}};
+    var digest = [{id: "foo", maxVersionSeen: 3422, transport: {host: 'new1host'}}];
+    var peerMock = {
+        id: "mock",
+        markContact: function () {}
+    };
+    var storage = {
+        get: function (id) {
+            if (id == "remote")
+                return peerMock;
+            
+            return null;
+        },
+        put: function (id, peer) {
+            if (id === "foo")
+                assert.fail("treated self as remote peer");
+
+        }
+    };
+    var transport = new events.EventEmitter();
+    transport.deltas = function () {};
+    var gossipmonger = new Gossipmonger({id: "foo"}, {
+        storage: storage, 
+        transport: transport
+    });
+    transport.emit('digest', remotePeer, digest);
+    test.done();
+};
+
 test["on 'digest' if gossipmonger has local peer with larger version it sends "
     + "delta to remote peer"] = function (test) {
     test.expect(5);
@@ -202,6 +235,51 @@ test["on 'digest' if gossipmonger has local peer with larger version it sends "
     });
     transport.emit('digest', remotePeer, digest);
 };
+
+test["on 'digest' if gossipmonger has self with larger version it sends "
+    + "delta to remote peer"] = function (test) {
+    test.expect(4);
+    var remotePeer = {id: "remote", transport: {host: 'localhost'}};
+    var digest = [{id: "local", maxVersionSeen: 3422, transport: {host: 'new1host'}}];
+    var peerMock = {
+        id: "mock",
+        markContact: function () {}
+    };
+    var storage = {
+        get: function (id) {
+            if (id == "remote")
+                return peerMock;
+            
+            return null;
+        },
+        put: function (id, peer) {
+            if (id === "local")
+                assert.fail("treated self as remote peer");
+
+        }
+    };
+    var transport = new events.EventEmitter();
+    transport.deltas = function (rPeer, lPeer, deltasToSend) {
+        test.deepEqual(rPeer, remotePeer);
+        test.equal(lPeer.id, "local");
+        test.equal(lPeer.transport, "bar");
+        test.deepEqual(deltasToSend, [["local", "foo", "bar", 3423]]);
+        test.done();
+    };
+    var gossipmonger = new Gossipmonger({
+        data: {
+            foo: ["bar", 3423]
+        },
+        id: "local", 
+        maxVersionSeen: 3423,
+        transport: "bar"
+    }, {
+        storage: storage, 
+        transport: transport
+    });
+    transport.emit('digest', remotePeer, digest);
+};
+
 
 test["on 'digest' if gossipmonger has deltas to send, only oldest up to "
     + "MAX_DELTAS_PER_GOSSIP will be sent"] = function (test) {
