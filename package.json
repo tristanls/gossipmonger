@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "Gossip protocol endpoint for real-time peer-to-peer replication",
   "scripts": {
+    "localtest": "node scripts/localtest.js",
     "test": "node scripts/test.js"
   },
   "main": "index.js",

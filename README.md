@@ -54,6 +54,12 @@ gossipmonger.update('foo', 'bar');
 
     npm test
 
+### Visual Test
+
+To watch a cluster of 5 nodes communicate via gossip run `scripts/locatest.js` via:
+
+    npm run localtest
+
 ## Overview
 
 Gossipmonger is an implementation of the Scuttlebutt gossip protocol endpoint for real-time peer-to-peer peer-state distribution. Gossip protocols are used in a decentralized peer-to-peer manner in order to make every peer that is connected aware of the state of every other peer. The objective is to give every peer global awareness without a centralized server. This is accomplished by heuristically guided message passing between peers. 
