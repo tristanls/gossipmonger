@@ -49,7 +49,8 @@ test['gossip() selects random live peer to send digest to'] = function (test) {
         },
         livePeers: function () {
             return lPeers;
-        }
+        },
+        on: function () {}
     };
     var transport = new events.EventEmitter();
     transport.digest = function (livePeer, localPeer, digest) {
@@ -85,7 +86,8 @@ test['gossip() selects random dead peer to send digest to (if no live peers)'] =
         },
         livePeers: function () {
             return [];
-        }
+        },
+        on: function () {}
     };
     var transport = new events.EventEmitter();
     transport.digest = function (deadPeer, localPeer, digest) {
@@ -122,7 +124,8 @@ test['gossip() selects random seed to send digest to if live peers less'
         },
         livePeers: function () {
             return lPeers;
-        }
+        },
+        on: function () {}
     };
     var transport = new events.EventEmitter();
     transport.digest = function (seed, localPeer, digest) {
@@ -182,6 +185,7 @@ test['gossip() updates liveness of live and dead peers'] = function (test) {
         livePeers: function () {
             return lPeers;
         },
+        on: function () {},
         put: function (id, peer) {
             // called twice (once for live3 and once for dead2)
             test.ok(["live3", "dead2"].indexOf(id) > -1);
@@ -222,7 +226,8 @@ test['gossip() sets timeout to go another round'] = function (test) {
         },
         livePeers: function () {
             return lPeers;
-        }
+        },
+        on: function () {}
     };
     var transport = new events.EventEmitter();
     transport.digest = function () {};

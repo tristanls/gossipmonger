@@ -95,6 +95,20 @@ test["new Gossipmonger() registers a listener for 'error' event on transport"] =
     });
 };
 
+test["new Gossipmonger() registers a listener for 'error' event on storage"] = function (test) {
+    test.expect(1);
+    var gossipmonger = new Gossipmonger({id: "foo"}, {
+        storage: {
+            on: function (event, callback) {
+                if (event == 'error') {
+                    test.ok(true);
+                    test.done();
+                }
+            }
+        }
+    });
+};
+
 test["new Gossipmonger() does not automatically set timeout for gossip"] = function (test) {
     test.expect(1);
     var gossipmonger = new Gossipmonger({id: "foo"});

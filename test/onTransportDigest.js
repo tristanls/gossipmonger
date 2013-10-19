@@ -48,6 +48,7 @@ test["on 'digest' gossipmonger retrieves remote peer from storage"] = function (
             test.done();
             return peerMock;
         },
+        on: function () {},
         put: function () {}
     };
     var transport = new events.EventEmitter();
@@ -74,6 +75,7 @@ test["on 'digest' gossipmonger marks contact on previously stored peer and "
             test.equal(id, remotePeer.id);
             return peerMock;
         },
+        on: function () {},
         put: function (id, peer) {
             test.equal(id, peerMock.id);
             test.strictEqual(peer, peerMock);
@@ -101,6 +103,7 @@ test["on 'digest' gossipmonger creates new peer if not in storage, emits 'new "
             test.equal(id, remotePeer.id);
             return null;
         },
+        on: function () {},
         put: function (id, peer) {
             test.equal(id, remotePeer.id);
             test.equal(peer.id, remotePeer.id);
@@ -136,6 +139,7 @@ test["on 'digest' if gossipmonger finds unknown peer in digest it creates it, "
             
             return null;
         },
+        on: function () {},
         put: function (id, peer) {
             if (id === "new1") {
                 test.equal(peer.maxVersionSeen, 3422);
@@ -172,6 +176,7 @@ test["on 'digest' if gossipmonger finds unknown peer it does not create it "
             
             return null;
         },
+        on: function () {},
         put: function (id, peer) {
             if (id === "foo")
                 assert.fail("treated self as remote peer");
@@ -209,6 +214,7 @@ test["on 'digest' if gossipmonger has no deltas to send it does not send it"] = 
             }
             return null;
         },
+        on: function () {},
         put: function (id, peer) {
             test.equal(id, "mock");
         }
@@ -251,6 +257,7 @@ test["on 'digest' if gossipmonger has local peer with larger version it sends "
             }
             return null;
         },
+        on: function () {},
         put: function (id, peer) {
             if (id === "new1") {
                 test.equal(peer.maxVersionSeen, 3422);
@@ -289,6 +296,7 @@ test["on 'digest' if gossipmonger has self with larger version it sends "
             
             return null;
         },
+        on: function () {},
         put: function (id, peer) {
             if (id === "local")
                 assert.fail("treated self as remote peer");
@@ -349,6 +357,7 @@ test["on 'digest' if gossipmonger has deltas to send, only oldest up to "
             }
             return null;
         },
+        on: function () {},
         put: function (id, peer) {
             if (id === "new1") {
                 test.equal(peer.maxVersionSeen, 3422);
@@ -427,6 +436,7 @@ test["on 'digest' if gossipmonger has deltas to send, only oldest up to "
             }
             return null;
         },
+        on: function () {},
         put: function (id, peer) {
             if (id === "new1") {
                 test.equal(peer.maxVersionSeen, 3422);
@@ -507,6 +517,7 @@ test["on 'digest' if gossipmonger has deltas to send, up to "
             }
             return null;
         },
+        on: function () {},
         put: function (id, peer) {
             if (id === "new1") {
                 test.equal(peer.maxVersionSeen, 3422);

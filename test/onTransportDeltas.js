@@ -47,6 +47,7 @@ test["on 'deltas' gossipmonger retrieves remote peer from storage"] = function (
             test.done();
             return peerMock;
         },
+        on: function () {},
         put: function () {}
     };
     var transport = new events.EventEmitter();
@@ -71,6 +72,7 @@ test["on 'deltas' gossipmonger marks contact on previously stored peer and store
             test.equal(id, remotePeer.id);
             return peerMock;
         },
+        on: function () {},
         put: function (id, peer) {
             test.equal(id, peerMock.id);
             test.strictEqual(peer, peerMock);
@@ -96,6 +98,7 @@ test["on 'deltas' gossipmonger creates new peer if not in storage, emits 'new pe
             test.equal(id, remotePeer.id);
             return null;
         },
+        on: function () {},
         put: function (id, peer) {
             test.equal(id, remotePeer.id);
             test.equal(peer.id, remotePeer.id);
@@ -128,6 +131,7 @@ test["on 'deltas' gossipmonger emits 'unknown peer' if delta for an unknown peer
 
             return peerMock;
         },
+        on: function () {},
         put: function () {}
     };
     var transport = new events.EventEmitter();
@@ -168,6 +172,7 @@ test["on 'deltas' gossipmonger updates peer with delta info, stores it, and emit
 
             return peerMock;
         },
+        on: function () {},
         put: function (id, peer) {
             if (id == "peer1") {
                 test.ok(peer._gotUpdated);

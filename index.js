@@ -84,6 +84,12 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
         var MemoryStorage = require('gossipmonger-memory-storage');
         self.storage = new MemoryStorage();
     }
+
+    // propagate storage error
+    self.storage.on('error', function (error) {
+        self.emit('error', error);
+    });
+
     self.transport = options.transport;
     if (!self.transport) {
         var TcpTransport = require('gossipmonger-tcp-transport');
