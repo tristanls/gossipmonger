@@ -238,6 +238,11 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
         }
     });
 
+    // propagate transport error
+    self.transport.on('error', function (error) {
+        self.emit('error', error);
+    });
+
     self.timeout = null;
 };
 
