@@ -27,6 +27,10 @@ var gossipmonger = new Gossipmonger(
         ]
     });
 
+gossipmonger.on('error', function (error) {
+    console.dir(error); 
+});
+
 gossipmonger.on('new peer', function (newPeer) {
     console.log("found new peer " + newPeer.id + " at " + newPeer.transport);
 });
@@ -138,6 +142,7 @@ Deltas are an array of delta objects, for example:
   * [new Gossipmonger(peerInfo, \[options\])](#new-gossipmongerpeerinfo-options)
   * [gossipmonger.gossip()](#gossipmongergossip)
   * [gossipmonger.update(key, value)](#gossipmongerupdatekey-value)
+  * [Event 'error'](#event-error)
   * [Event 'new peer'](#event-new-peer)
   * [Event 'peer dead'](#event-peer-dead)
   * [Event 'peer live'](#event-peer-live)
@@ -240,6 +245,13 @@ _**CAUTION: reserved for internal use**_
 
 Emitted when Gossipmonger sends a digest to a remote peer.
 
+### Event `error`
+
+  * `function (error) {}`
+    * `error`: _Object_ An error.
+
+Emitted when Gossipmonger or one of its dependencies emits an error.
+
 ### Event `new peer`
 
   * `function (newPeer) {}`
@@ -338,6 +350,7 @@ For reference implementation, see [gossipmonger-tcp-transport](https://github.co
   * [transport.digest(remotePeer, localPeer, digestToSend)](#transportdigestremotepeer-localpeer-digesttosend)
   * [Event 'deltas'](#event-deltas)
   * [Event 'digest'](#event-digest)
+  * [Event 'error'](#event-error-1)
 
 ### transport.deltas(remotePeer, localPeer, deltasToSend)
 
@@ -369,7 +382,7 @@ Sends `digestToSend` to the `remotePeer`.
       * `transport`: _Any_ Any data identifying this peer to the transport mechanism that is required for correct transport operation.    
     * `deltas`: _Any_ Received deltas.
 
-Emitted when TcpTransport receives `deltas` from a peer.
+Emitted when Transport receives `deltas` from a peer.
 
 ### Event `digest`
 
@@ -379,7 +392,14 @@ Emitted when TcpTransport receives `deltas` from a peer.
       * `transport`: _Any_ Any data identifying this peer to the transport mechanism that is required for correct transport operation.
     * `digest`: _Any_ Received digest.
 
-Emitted when TcpTransport receives `digest` from a peer.
+Emitted when Transport receives `digest` from a peer.
+
+### Event `error`
+
+  * `function (error) {}`
+    * `error`: _Object_ An error that occurred.
+
+Emitted when Transport encounters an error. If no handler is registered, an exception will be thrown.
 
 ## Available Modules
 
