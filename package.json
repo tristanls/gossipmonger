@@ -1,6 +1,6 @@
 {
   "name": "gossipmonger",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Gossip protocol endpoint for real-time peer-to-peer replication",
   "scripts": {
     "localtest": "node scripts/localtest.js",
