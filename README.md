@@ -162,7 +162,7 @@ Deltas are an array of delta objects, for example:
     * `MINIMUM_LIVE_PEERS`: _Integer_ _(Default: 1)_ If the number of live peers visible to this peer drops below `MINIMUM_LIVE_PEERS`, this peer will make sure to gossip with one of the seeds even if it thinks it's dead.
     * `seeds`: _Array_ _(Default: [])_ An array of seed peers that the `transport` understands.
     * `storage`: _Object_ _(Default: `gossipmonger-memory-storage`)_ An initialized and ready to use storage module for storing local and peer data that conforms to the Gossipmonger Storage Protocol. If `storage` is not provided, a new instance of `gossipmonger-memory-storage` will be created and used with default settings.
-    * `transport`: _Object_ _(Default: `gossipmonger-tcp-transport`)_ An initialized and ready to use transport module for sending communications that conforms to the Gossipmonger Transport Protocol. If `transport` is not provided, a new instance of `gossipmonger-tcp-transport` will be created and used with default settings.
+    * `transport`: _Object_ _(Default: `gossipmonger-tcp-transport`)_ An initialized and ready to use transport module for sending communications that conforms to the Gossipmonger Transport Protocol. If `transport` is not provided, a new instance of `gossipmonger-tcp-transport` will be initialized with `peerInfo.transport` settings.
 
 Creates a new Gossipmonger instance.
 
