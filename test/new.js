@@ -52,6 +52,21 @@ test['new Gossipmonger() creates a peer from peerInfo'] = function (test) {
     test.done();
 };
 
+test['new Gossipmonger() initializes default transport with self.localPeer.transport'] = function (test) {
+    test.expect(2);
+    var gossipmonger = new Gossipmonger({
+        id: "foo", 
+        maxVersionSeen: 324134,
+        transport: {
+            host: 'localhost',
+            port: 1337
+        }
+    });
+    test.equal(gossipmonger.transport.host, 'localhost');
+    test.equal(gossipmonger.transport.port, 1337);
+    test.done();
+};
+
 test["new Gossipmonger() registers a listener for 'deltas' event on transport"] = function (test) {
     test.expect(1);
     var gossipmonger = new Gossipmonger({id: "foo"}, {
