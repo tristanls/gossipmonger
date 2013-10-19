@@ -26,40 +26,40 @@ t1 = TcpTransport.listen({port: 9991}, function () {
 
 function startLocalTest() {
 
-    g1 = new Gossipmonger({id: id1, transport: {port: 9991}}, {
+    g1 = new Gossipmonger({id: id1, transport: {host: 'localhost', port: 9991}}, {
         seeds: [
-            {id: id2, transport: {port: 9992}},
-            {id: id3, transport: {port: 9993}}
+            {id: id2, transport: {host: 'localhost', port: 9992}},
+            {id: id3, transport: {host: 'localhost', port: 9993}}
         ],
         transport: t1
     });
-    g2 = new Gossipmonger({id: id2, transport: {port: 9992}}, {
+    g2 = new Gossipmonger({id: id2, transport: {host: 'localhost', port: 9992}}, {
         seeds: [
-            {id: id1, transport: {port: 9991}},
-            {id: id3, transport: {port: 9993}}
+            {id: id1, transport: {host: 'localhost', port: 9991}},
+            {id: id3, transport: {host: 'localhost', port: 9993}}
         ],
         transport: t2
     });
-    g3 = new Gossipmonger({id: id3, transport: {port: 9993}}, {
+    g3 = new Gossipmonger({id: id3, transport: {host: 'localhost', port: 9993}}, {
         seeds: [
-            {id: id2, transport: {port: 9992}},
-            {id: id1, transport: {port: 9991}}
+            {id: id2, transport: {host: 'localhost', port: 9992}},
+            {id: id1, transport: {host: 'localhost', port: 9991}}
         ],
         transport: t3
     });
-    g4 = new Gossipmonger({id: id4, transport: {port: 9994}}, {
+    g4 = new Gossipmonger({id: id4, transport: {host: 'localhost', port: 9994}}, {
         seeds: [
-            {id: id1, transport: {port: 9991}},
-            {id: id2, transport: {port: 9992}},
-            {id: id3, transport: {port: 9993}}
+            {id: id1, transport: {host: 'localhost', port: 9991}},
+            {id: id2, transport: {host: 'localhost', port: 9992}},
+            {id: id3, transport: {host: 'localhost', port: 9993}}
         ],
         transport: t4
     });
-    g5 = new Gossipmonger({id: id5, transport: {port: 9995}}, {
+    g5 = new Gossipmonger({id: id5, transport: {host: 'localhost', port: 9995}}, {
         seeds: [
-            {id: id1, transport: {port: 9991}},
-            {id: id2, transport: {port: 9992}},
-            {id: id3, transport: {port: 9993}}
+            {id: id1, transport: {host: 'localhost', port: 9991}},
+            {id: id2, transport: {host: 'localhost', port: 9992}},
+            {id: id3, transport: {host: 'localhost', port: 9993}}
         ],
         transport: t5
     });
