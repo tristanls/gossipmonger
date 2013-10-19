@@ -250,7 +250,7 @@ Emitted when Gossipmonger sends a digest to a remote peer.
   * `function (error) {}`
     * `error`: _Object_ An error.
 
-Emitted when Gossipmonger or one of its dependencies emits an error.
+Emitted when Gossipmonger or one of its dependencies emits an error. If no handler is registered, an exception will be thrown.
 
 ### Event `new peer`
 
