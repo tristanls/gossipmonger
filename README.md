@@ -305,6 +305,8 @@ Storage modules shall rely on `peer.live` property to keep track of `peer` liven
 
 Storage modules shall treat all `peer` properties as immutable.
 
+Storage implementations shall allow registering and interacting with event listeners as provided by `events.EventEmitter` interface.
+
 For reference implementation, see [gossipmonger-memory-storage](https://github.com/tristanls/gossipmonger-memory-storage).
 
 ### Gossipmonger Storage API
@@ -313,6 +315,7 @@ For reference implementation, see [gossipmonger-memory-storage](https://github.c
   * [storage.get(id)](#storagegetid)
   * [storage.livePeers()](#storagelivepeers)
   * [storage.put(id, peer)](#storageputid-peer)
+  * [Event 'error'](#event-error-1)
 
 ### storage.deadPeers()
 
@@ -332,6 +335,13 @@ For reference implementation, see [gossipmonger-memory-storage](https://github.c
   * `id`: _String_ Id of peer to put.
   * `peer`: _Object_ Peer to put into storage.
 
+### Event `error`
+
+  * `function (error) {}`
+    * `error`: _Object_ An error that occurred.
+
+Emitted when Storage encounters an error. If no handler is registered, an exception will be thrown.
+
 ## Gossipmonger Transport
 
 Modules implementing the transport mechanism for Gossipmonger shall conform to the following interface. A `transport` is a JavaScript object.
@@ -350,7 +360,7 @@ For reference implementation, see [gossipmonger-tcp-transport](https://github.co
   * [transport.digest(remotePeer, localPeer, digestToSend)](#transportdigestremotepeer-localpeer-digesttosend)
   * [Event 'deltas'](#event-deltas)
   * [Event 'digest'](#event-digest)
-  * [Event 'error'](#event-error-1)
+  * [Event 'error'](#event-error-2)
 
 ### transport.deltas(remotePeer, localPeer, deltasToSend)
 
