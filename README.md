@@ -47,6 +47,19 @@ gossipmonger.on('update', function (peerId, key, value) {
     console.log("peer " + peerId + " updated key " + key + " with " + value);
 });
 
+/* **IMPORTANT**
+ * Typically, one would create a `transport`, start it (call listen())
+ * and then pass it in as `options.transport` in Gossipmonger constructor. This
+ * makes the implementation of Gossipmonger less complex and simpler.
+ * For development purposes, Gossipmonger comes with a default transport, so
+ * it's easier to get a feel for it, but because of that, if you don't provide
+ * a `transport`, the default one will be used but **you need to start it**.
+ * The call illustrated below will start the default transport. If this isn't done,
+ * you will not receive communications from other gossipmongers. */
+gossipmonger.transport.listen(function () {
+    console.log('default transport is listening');
+});
+
 gossipmonger.gossip(); // start gossiping
 
 gossipmonger.update('foo', 'bar');
@@ -162,11 +175,15 @@ Deltas are an array of delta objects, for example:
     * `MINIMUM_LIVE_PEERS`: _Integer_ _(Default: 1)_ If the number of live peers visible to this peer drops below `MINIMUM_LIVE_PEERS`, this peer will make sure to gossip with one of the seeds even if it thinks it's dead.
     * `seeds`: _Array_ _(Default: [])_ An array of seed peers that the `transport` understands.
     * `storage`: _Object_ _(Default: `gossipmonger-memory-storage`)_ An initialized and ready to use storage module for storing local and peer data that conforms to the Gossipmonger Storage Protocol. If `storage` is not provided, a new instance of `gossipmonger-memory-storage` will be created and used with default settings.
-    * `transport`: _Object_ _(Default: `gossipmonger-tcp-transport`)_ An initialized and ready to use transport module for sending communications that conforms to the Gossipmonger Transport Protocol. If `transport` is not provided, a new instance of `gossipmonger-tcp-transport` will be initialized with `peerInfo.transport` settings.
+    * `transport`: _Object_ _(Default: `gossipmonger-tcp-transport`)_ An **initialized and ready to use (i.e. listening)** transport module for sending communications that conforms to the Gossipmonger Transport Protocol. If `transport` is not provided, a new instance of `gossipmonger-tcp-transport` will be initialized with `peerInfo.transport` settings, but it **will not be started**. In this case, `gossipmonger.transport.listen()` must be called explicitly to start listening.
 
 Creates a new Gossipmonger instance.
 
 The `seeds` are necessary in order to bootstrap the gossip cluster. Gossipmonger will use these `seeds` to find out about other nodes and also as peers of last resort if all the peers appear to be dead.
+
+**IMPORTANT:** _If no `transport` is provided in `options`, then the default `gossipmonger-tcp-transport` will be used. However, it needs to be started by explicitily calling `gossipmonger.transport.listen()` (see [Usage](#usage)). If this does not happen, no communications can be received from other Gossipmongers and they will think this instance is dead._
+
+_NOTE: "Why do I have to excplicitly start the transport?". This way, you can create a Gossipmonger instance without worrying about servers being started on the network. It makes things much easier for testing. It also gives you the power of sequencing actions and when you want to start interacting with the outside world._
 
 ### gossipmonger.digest(livePeers)
 

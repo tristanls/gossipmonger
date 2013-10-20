@@ -61,10 +61,13 @@ var events = require('events'),
             `storage` is not provided, a new instance of `gossipmonger-memory-storage` 
             will be created and used with default settings.
     * `transport`: _Object_ _(Default: `gossipmonger-tcp-transport`)_ An 
-            initialized and ready to use transport module for sending 
-            communications that conforms to the Gossipmonger Transport Protocol. 
-            If `transport` is not provided, a new instance of `gossipmonger-tcp-transport` 
-            will be created and used with default settings.
+            **initialized and ready to use (i.e. listening)** transport module 
+            for sending communications that conforms to the Gossipmonger 
+            Transport Protocol. If `transport` is not provided, a new instance 
+            of `gossipmonger-tcp-transport` will be initialized with 
+            `peerInfo.transport` settings, but it **will not be started**. 
+            In this case, `gossipmonger.transport.listen()` must be called 
+            explicitly to start listening.
 */
 var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
     var self = this;
