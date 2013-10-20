@@ -93,8 +93,8 @@ test["on 'digest' gossipmonger marks contact on previously stored peer and "
 
 test["on 'digest' gossipmonger creates new peer if not in storage, emits 'new "
     + "peer', and stores it"] = function (test) {
-    test.expect(5);
-    var remotePeer = {id: "remote", transport: {host: 'localhost'}};
+    test.expect(6);
+    var remotePeer = {id: "remote", maxVersionSeen: 17, transport: {host: 'localhost'}};
     var peerMock = {
         markContact: function () {}
     };
@@ -107,6 +107,8 @@ test["on 'digest' gossipmonger creates new peer if not in storage, emits 'new "
         put: function (id, peer) {
             test.equal(id, remotePeer.id);
             test.equal(peer.id, remotePeer.id);
+            // we haven't seen any versions, so make sure we mark it as such
+            test.equal(peer.maxVersionSeen, 0);
             test.deepEqual(peer.transport, remotePeer.transport);
             test.done();
         }
@@ -142,7 +144,8 @@ test["on 'digest' if gossipmonger finds unknown peer in digest it creates it, "
         on: function () {},
         put: function (id, peer) {
             if (id === "new1") {
-                test.equal(peer.maxVersionSeen, 3422);
+                // we haven't seen any versions, so make sure we mark it as such
+                test.equal(peer.maxVersionSeen, 0);
                 test.deepEqual(peer.transport, {host: 'new1host'});
             }
         }

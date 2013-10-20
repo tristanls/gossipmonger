@@ -185,6 +185,7 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
             
             if (!p) {
                 // add previously unknown peer to our awareness
+                peer.maxVersionSeen = 0;
                 p = new Peer(peer.id, peer);
                 self.storage.put(peer.id, p);
                 self.emit('new peer', p);
