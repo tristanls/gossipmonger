@@ -314,8 +314,10 @@ Gossipmonger.prototype.gossip = function gossip () {
     if (livePeers.length < self.MINIMUM_LIVE_PEERS && self.seeds.length > 0) {
         // select random seed
         var seed = self.seeds[Math.floor(Math.random() * self.seeds.length)];
-        self.emit('digest send', seed, digestToSend);
-        self.transport.digest(seed, self.localPeer, digestToSend);
+        if (seed.id != self.localPeer.id) {
+            self.emit('digest send', seed, digestToSend);
+            self.transport.digest(seed, self.localPeer, digestToSend);
+        }
     }
 
     // update peer liveness

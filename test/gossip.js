@@ -30,7 +30,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 "use strict";
 
-var events = require('events'),
+var assert = require('assert'),
+    events = require('events'),
     Gossipmonger = require('../index.js');
 
 var test = module.exports = {};
@@ -155,6 +156,48 @@ test['gossip() selects random seed to send digest to if live peers less'
     clearTimeout(gossipmonger.timeout);
 };
 
+test['gossip() selects random seed but skips itself if live peers less than'
+    + ' MINIMUM_LIVE_PEERS'] = function (test) {
+    test.expect(1);
+    var lPeers = [
+                {id: "live1", phi: function () { return 1; }},
+                {id: "live2", phi: function () { return 1; }},
+                {id: "live3", phi: function () { return 1; }},
+                {id: "live4", phi: function () { return 1; }}
+            ];
+    var storage = {
+        deadPeers: function () {
+            return [];
+        },
+        livePeers: function () {
+            return lPeers;
+        },
+        on: function () {}
+    };
+    var transport = new events.EventEmitter();
+    transport.digest = function (seed, localPeer, digest) {
+        if (seed.id.match("live")) 
+            return;
+
+        if (seed.id == "seed1")
+            assert.fail("Sent digest to self");
+    };
+    var gossipmonger = new Gossipmonger({id: "seed1"}, {
+        MINIMUM_LIVE_PEERS: 6,
+        seeds: [
+            {id: "seed1", transport: "1trans"}        
+        ],
+        storage: storage,
+        transport: transport
+    });
+    gossipmonger.digest = function (livePeers) {
+        test.deepEqual(livePeers, lPeers);
+        return "digestMock";
+    };
+    gossipmonger.gossip();
+    clearTimeout(gossipmonger.timeout);
+    test.done();
+};
 
 test['gossip() updates liveness of live and dead peers'] = function (test) {
     test.expect(13);
