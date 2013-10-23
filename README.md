@@ -6,6 +6,10 @@ _Stability: 1 - [Experimental](https://github.com/tristanls/stability-index#stab
 
 Gossipmonger is an implementation of the Scuttlebutt gossip protocol endpoint for real-time peer-to-peer state distribution with pluggable storage and transport mechanisms.
 
+## Contributors
+
+[@tristanls](https://github.com/tristanls), [@KenanSulayman](https://github.com/KenanSulayman)
+
 ## Usage
 
 ```javascript

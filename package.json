@@ -26,6 +26,9 @@
     "replication",
     "real-time"
   ],
-  "author": "Tristan Slominski <tristan.slominski@gmail.com>",
+  "contributors": [
+    "Tristan Slominski <tristan.slominski@gmail.com>",
+    "Kenan Sulayman <kenan@sly.mn>"
+  ],
   "license": "MIT"
 }
