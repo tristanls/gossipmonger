@@ -10,7 +10,7 @@
   "dependencies": {
     "gossipmonger-memory-storage": "0.1.0",
     "gossipmonger-peer": "0.1.0",
-    "gossipmonger-tcp-transport": "0.1.3"
+    "gossipmonger-tcp-transport": "0.1.4"
   },
   "devDependencies": {
     "nodeunit": "0.8.1"
