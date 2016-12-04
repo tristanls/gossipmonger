@@ -97,6 +97,10 @@ var Gossipmonger = module.exports = function Gossipmonger (peerInfo, options) {
     if (!self.transport) {
         var TcpTransport = require('gossipmonger-tcp-transport');
         self.transport = new TcpTransport(self.localPeer.transport);
+    } else {
+        if ( options.autoTransport ) {
+            self.transport = new self.transport(self.localPeer.transport);
+        }
     }
 
     /*
